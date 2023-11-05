@@ -17,7 +17,9 @@ return new class extends Migration
             $table->rememberToken();
             $table->string('phone')->nullable();
             $table->string('position')->nullable();
+            $table->boolean('admin')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
