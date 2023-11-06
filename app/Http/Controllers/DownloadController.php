@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use niklasravnsborg\LaravelPdf\Facades\Pdf;
 
@@ -13,6 +14,7 @@ class DownloadController extends Controller
     public function getDownload($model)
     {
         try {
+            $user = Auth::user();
             $title = $model;
             switch ($model) {
                 case 'user':
@@ -30,9 +32,12 @@ class DownloadController extends Controller
                             DB::raw("DATE_FORMAT(attendances.clock_out, '%H:%i') AS clock_out"),
                             DB::raw("CASE WHEN attendances.late = 1 THEN 'Yes' ELSE 'No' END AS late")
                         )
-                        ->join('users', 'attendances.user_id', '=','users.id')
-                        ->orderBy('attendances.updated_at', 'DESC')
-                        ->get();
+                        ->join('users', 'attendances.user_id', '=','users.id');
+                    if ($user->admin) {
+                        $report = $report->where('attendances.user_id', $user->id);
+                    }
+                    $report = $report->orderBy('attendances.updated_at', 'DESC')->get();
+
                     $data = $report->map(function ($record) {
                         return [
                             'name' => $record->name,
