@@ -34,7 +34,7 @@
                 <tr>
                     <td style="text-align: center">{{ \Carbon\Carbon::parse($item->date)->format('d M Y') }}</td>
                     <td style="text-align: center">{{ \Carbon\Carbon::parse($item->clock_in)->format('H:i') }}</td>
-                    <td style="text-align: center">{{ \Carbon\Carbon::parse($item->clock_out)->format('H:i') }}</td>
+                    <td style="text-align: center">{{ $item->clock_out == null ? '' : \Carbon\Carbon::parse($item->clock_out)->format('H:i') }}</td>
                 </tr>
             @endforeach
         </table>
