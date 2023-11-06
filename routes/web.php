@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DownloadController;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
@@ -41,3 +42,5 @@ Route::prefix('/clock-out')->group(function () {
         return view('modal', ['success' => false, 'title' => $message, 'time' => '', 'date' => '']);
     });
 });
+
+Route::get('/download/{model}', [DownloadController::class, 'getDownload']);
